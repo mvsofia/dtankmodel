@@ -1,0 +1,403 @@
+function [S1f,S2f,qs1,qs2,qs3,qb1,S1,S2,cont]=tankcalctestenovo(ETR1,ETR2,P,Spday1,Spday2,dest1,dest2,prop1,prop2,m,n,tt,S1ff,S2ff,acu)
+%[S1f,S2f,qs1,qs2,qs3,qb1,S1,S2]
+%Inicializa Matrizes
+S1fh=zeros(m,n,1,tt);
+S1fh=zeros(m,n,2,tt);
+
+
+%[vVisitado,vAcumulado]=tagCell(m,n,dest1,dest2);
+
+S1f=zeros(m,n);
+S2f=zeros(m,n);
+qs1=zeros(m,n);
+qs2=zeros(m,n);
+qs3=zeros(m,n);
+qst=zeros(m,n);
+qb1=zeros(m,n);
+S1=zeros(m,n);
+S2=zeros(m,n);
+
+totalflow=zeros(m,n);
+S1ff(:,:,tt)=S1f;
+S2ff(:,:,tt)=S2f;
+
+
+HI1=1.2140577;
+HI2=71.926;
+HA2=66.05691268;
+HA1=2.994994336;
+HB1=0.0;
+a1=0.002460345;
+a2=0.054861948;
+b1=5.54E-05;
+a0=0.002901886;
+cont=0;
+
+
+
+
+
+
+
+% cont=0;
+%[arv1,arv2]=tagCell2(m,n,dest1,dest2);
+
+for hud = 1:50
+    for f=2:1:m-1
+        
+        for g=2:1:n-1
+            
+            %Esta condicao serve neutralizar as matrizes S1 e S2
+            if (f==9 && g==19 )
+                f=9;
+            end
+            
+            qsts=0;
+            qs3s=0;
+            
+            flag=0;
+            divi=0;
+            cont=cont+1;
+            if (dest1(f,g)==-9999 && dest2(f,g)==-9999)
+                
+                cont=cont-1;
+                
+                S1(f,g)=0;
+                qb1(f,g)=0;
+                S2(f,g)=0;
+                
+                qs1(f,g)=0;
+                qs2(f,g)=0;
+                qs3(f,g)=0;
+                
+                S1f(f,g)=0;
+                S2f(f,g)=0;
+                qst(f,g)=0;
+                
+                flag=1;
+            else
+                
+                
+                if dest1(f-1,g-1)==8
+                    qsts=qsts+(qst(f-1,g-1)*prop1(f-1,g-1));
+                    qs3s=qs3s+(qs3(f-1,g-1)*prop1(f-1,g-1));
+                    flag=1;
+                    divi=divi+1;
+                end
+                if dest1(f-1,g)==7
+                    qsts=qsts+(qst(f-1,g)*prop1(f-1,g));
+                    qs3s=qs3s+(qs3(f-1,g)*prop1(f-1,g));
+                    flag=1;
+                    divi=divi+1;
+                end
+                if dest1(f-1,g+1)==6
+                    qsts=qsts+(qst(f-1,g+1)*prop1(f-1,g+1));
+                    qs3s=qs3s+(qs3(f-1,g+1)*prop1(f-1,g+1));
+                    flag=1;
+                    divi=divi+1;
+                end
+                if dest1(f,g-1)==1
+                    qsts=qsts+(qst(f,g-1)*prop1(f,g-1));
+                    qs3s=qs3s+(qs3(f,g-1)*prop1(f,g-1));
+                    flag=1;
+                    divi=divi+1;
+                end
+                if dest1(f,g+1)==5
+                    qsts=qsts+(qst(f,g+1)*prop1(f,g+1));
+                    qs3s=qs3s+(qs3(f,g+1)*prop1(f,g+1));
+                    flag=1;
+                    divi=divi+1;
+                end
+                if dest1(f+1,g+1)==4
+                    qsts=qsts+(qst(f+1,g+1)*prop1(f+1,g+1));
+                    qs3s=qs3s+(qs3(f+1,g+1)*prop1(f+1,g+1));
+                    flag=1;
+                    divi=divi+1;
+                end
+                if dest1(f+1,g)==3
+                    qsts=qsts+(qst(f+1,g)*prop1(f+1,g));
+                    qs3s=qs3s+(qs3(f+1,g)*prop1(f+1,g));
+                    flag=1;
+                    divi=divi+1;
+                end
+                if dest1(f+1,g-1)==2
+                    qsts=qsts+(qst(f+1,g-1)*prop1(f+1,g-1));
+                    qs3s=qs3s+(qs3(f+1,g-1)*prop1(f+1,g-1));
+                    flag=1;
+                    divi=divi+1;
+                end
+                
+                if dest2(f-1,g-1)==8
+                    qsts=qsts+(qst(f-1,g-1)*prop2(f-1,g-1));
+                    qs3s=qs3s+(qs3(f-1,g-1)*prop2(f-1,g-1));
+                    flag=1;
+                    divi=divi+1;
+                end
+                if dest2(f-1,g)==7
+                    qsts=qsts+(qst(f-1,g)*prop1(f-1,g));
+                    qs3s=qs3s+(qs3(f-1,g)*prop1(f-1,g));
+                    flag=1;
+                    divi=divi+1;
+                end
+                if dest2(f-1,g+1)==6
+                    qsts=qsts+(qst(f-1,g+1)*prop2(f-1,g+1));
+                    qs3s=qs3s+(qs3(f-1,g+1)*prop2(f-1,g+1));
+                    flag=1;
+                    divi=divi+1;
+                end
+                if dest2(f,g-1)==1
+                    qsts=qsts+(qst(f,g-1)*prop2(f,g-1));
+                    qs3s=qs3s+(qs3(f,g-1)*prop2(f,g-1));
+                    flag=1;
+                    divi=divi+1;
+                end
+                
+                if dest2(f,g+1)==5
+                    qsts=qsts+(qst(f,g+1)*prop2(f,g+1));
+                    qs3s=qs3s+(qs3(f,g+1)*prop2(f,g+1));
+                    flag=1;
+                    divi=divi+1;
+                end
+                if dest2(f+1,g+1)==4
+                    qsts=qsts+(qst(f+1,g+1)*prop2(f+1,g+1));
+                    qs3s=qs3s+(qs3(f+1,g+1)*prop2(f+1,g+1));
+                    flag=1;
+                    divi=divi+1;
+                end
+                if dest2(f+1,g)==3
+                    qsts=qsts+(qst(f+1,g)*prop2(f+1,g));
+                    qs3s=qs3s+(qs3(f+1,g)*prop2(f+1,g));
+                    flag=1;
+                    divi=divi+1;
+                end
+                if dest2(f+1,g-1)==2
+                    qsts=qsts+(qst(f+1,g-1)*prop2(f+1,g-1));
+                    qs3s=qs3s+(qs3(f+1,g-1)*prop2(f+1,g-1));
+                    flag=1;
+                    divi=divi+1; %#ok<NASGU>
+                end
+                
+                
+                %esse fica validar se o qst <> 0
+                % se ele for = 0 , ainda nao foi visitado.
+                %tt = dia 1 e tt <> 1 qualquer outro dia
+%                 if (flag==1)
+                    
+                    
+                    if tt==1
+                        
+                        if HI1 +P-ETR1<0
+                            S1(f,g)=0;
+                        else
+                            %arvore=arv2(arv1(i,j));
+                            %vAcumulado(i,j,1)= visitaCell(arvore,arv2);
+                            S1(f,g)= HI1+P-ETR1+(qsts/10);
+                            
+                            
+                        end
+                        qb1(f,g)=a0*S1(f,g);
+                        if HI2 + P -ETR1 <0
+                            ETR2=abs(HI1 + P -ETR1);
+                        else
+                            ETR2=0;
+                        end
+                        if HI2 + qb1(f,g) -ETR2 <0
+                            S2(f,g)=0;
+                        else
+                            S2(f,g)=HI2+ qb1(f,g)-ETR2+(qs3s/10);
+                        end
+                        if  S1(f,g)> HA1
+                            qs1(f,g)=a1*(S1(f,g)-HA1);
+                        else
+                            qs1(f,g)=0;
+                        end
+                        if  S1(f,g)> HA2
+                            qs2(f,g)=a2*(S1(f,g)-HA2);
+                        else
+                            qs2(f,g)=0;
+                        end
+                        if  S2(f,g)> HB1
+                            qs3(f,g)=b1*(S2(f,g)-HB1);
+                        else
+                            qs3(f,g)=0;
+                        end
+                        
+                        qst(f,g)=qs1(f,g)+qs2(f,g);
+                        %qsts=qsts+qst(f,g); fazer o cumula qsts como o acumulaCell
+                        S1f(f,g)=S1(f,g)-qst(f,g)-qb1(f,g);
+                        S2f(f,g)=S2(f,g)-qs3(f,g);
+                        
+                        totalflow(f,g)=qs1(f,g)+qs2(f,g)+qs3(f,g);
+                        
+                        
+                        
+                        
+                        
+                    end
+                    if tt>1
+                        
+                        if (S1ff(f,g,tt-1)+P-ETR1)<0
+                            S1(f,g)=0;
+                            
+                        else
+                            
+                            S1(f,g)=S1ff(f,g,tt-1)+P-ETR1 + (qsts/10);
+                            
+                        end
+                        
+                        %dependente da S1
+                        qb1(f,g)=a0*S1(f,g);
+                        
+                        if (S1ff(f,g,tt-1) + P - ETR1)<0
+                            ETR2=abs(S1ff(f,g,tt-1) + P -ETR1);
+                        else
+                            ETR2=0;
+                        end
+                        if (S2ff(f,g,tt-1) + qb1(f,g) -ETR2 )<0
+                            S2(f,g)=0;
+                        else
+                            S2(f,g)=S2ff(f,g,tt-1)+ qb1(f,g)-ETR2+(qs3s/10);
+                        end
+                        
+                        if  S1(f,g)> HA1
+                            qs1(f,g)=a1*(S1(f,g)-HA1);
+                        else
+                            qs1(f,g)=0;
+                        end
+                        
+                        if  S1(f,g)> HA2
+                            qs2(f,g)=a2*(S1(f,g)-HA2);
+                        else
+                            qs2(f,g)=0;
+                        end
+                        
+                        % comparacao que esta na dissertacao (para todas as celulas)
+                        if  S2(f,g)> HB1
+                            qs3(f,g)=b1*(S2(f,g)-HB1);
+                        else
+                            qs3(f,g)=0;
+                        end
+                        
+                        
+                        qst(f,g)=qs1(f,g)+qs2(f,g);
+                        S1f(f,g)=S1(f,g)-qst(f,g)-qb1(f,g);
+                        S2f(f,g)=S2(f,g)-qs3(f,g);
+                        totalflow(f,g)=qs1(f,g)+qs2(f,g)+qs3(f,g);
+                        
+                    end
+                    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% checades2 para 7
+                    
+                end
+                
+%                 %nao atender nenhuma das condiçoes
+%                 if (flag==0)
+%                     
+%                     if tt==1
+%                         if HI1 +P-ETR1<0
+%                             S1(f,g)=0;
+%                         else
+%                             S1(f,g)= HI1+P-ETR1;
+%                         end
+%                         qb1(f,g)=a0*S1(f,g);
+%                         if HI2 + P -ETR1 <0
+%                             ETR2=abs(HI1 + P -ETR1);
+%                         else
+%                             ETR2=0;
+%                         end
+%                         if HI2 + qb1(f,g) -ETR2 <0
+%                             S2(f,g)=0;
+%                         else
+%                             S2(f,g)=HI2+ qb1(f,g)-ETR2;
+%                         end
+%                         if  S1(f,g)> HA1
+%                             qs1(f,g)=a1*(S1(f,g)-HA1);
+%                         else
+%                             qs1(f,g)=0;
+%                         end
+%                         if  S1(f,g)> HA2
+%                             qs2(f,g)=a2*(S1(f,g)-HA2);
+%                         else
+%                             qs2(f,g)=0;
+%                         end
+%                         if  S2(f,g)> HB1
+%                             qs3(f,g)=b1*(S2(f,g)-HB1);
+%                         else
+%                             qs3(f,g)=0;
+%                         end
+%                         
+%                         qst(f,g)=qs1(f,g)+qs2(f,g);
+%                         S1f(f,g)=S1(f,g)-qs1(f,g)-qs2(f,g)-qb1(f,g);
+%                         S2f(f,g)=S2(f,g)-qs3(f,g);
+%                         
+%                         totalflow(f,g)=qs1(f,g)+qs2(f,g)+qs3(f,g);
+%                     end
+%                     if tt>1
+%                         
+%                         
+%                         if S1ff(f,g,tt-1)+P-ETR1<0
+%                             S1(f,g)=0;
+%                             
+%                         else
+%                             
+%                             S1(f,g)=S1ff(f,g,tt-1)+P-ETR1;
+%                         end
+%                                               
+%                         qb1(f,g)=a0*S1(f,g);
+%                         
+%                         if S1ff(f,g,tt-1) + P -ETR1 <0
+%                             ETR2=abs(S1ff(f,g,tt-1) + P -ETR1);
+%                         else
+%                             ETR2=0;
+%                         end
+%                         if S2ff(f,g,tt-1) + qb1(f,g) -ETR2 <0
+%                             S2(f,g)=0;
+%                         else
+%                             S2(f,g)=S2ff(f,g,tt-1)+ qb1(f,g)-ETR2;
+%                         end
+%                         if  S1(f,g)> HA1
+%                             qs1(f,g)=a1*(S1(f,g)-HA1);
+%                         else
+%                             qs1(f,g)=0;
+%                         end
+%                         if  S1(f,g)> HA2
+%                             qs2(f,g)=a2*(S1(f,g)-HA2);
+%                         else
+%                             qs2(f,g)=0;
+%                         end
+%                         if  S2(f,g)> HB1
+%                             qs3(f,g)=b1*(S2(f,g)-HB1);
+%                         else
+%                             qs3(f,g)=0;
+%                         end
+%                         
+%                         
+%                         qst(f,g)=qs1(f,g)+qs2(f,g);
+%                         S1f(f,g)=S1(f,g)-qs1(f,g)-qs2(f,g)-qb1(f,g);
+%                         S2f(f,g)=qb1(f,g)-ETR2-qs3(f,g);
+%                         totalflow(f,g)=qs1(f,g)+qs2(f,g)+qs3(f,g);
+%                         
+%                     end
+%                     
+%                     
+%                     
+%                 end
+%             end
+            
+          
+            
+        end
+        
+        
+        
+    end
+ 
+end
+
+
+
+
+
+
+
+
+
