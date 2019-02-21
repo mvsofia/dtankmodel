@@ -1,0 +1,267 @@
+clear
+close all
+clc
+tic
+filename='rgformawatershed12.xlsx';
+RG=xlsread(filename);
+s=0;
+t=0;
+[m,n]= size(RG);
+dest1=zeros(size(RG));
+dest2=zeros(size(RG));
+prop1=zeros(size(RG));
+prop2=zeros(size(RG));
+alpha1=0;
+alpha2=0;
+
+for i=1:1:m
+    for j= 1:1:n
+        
+%         %%if RG(i,j)==0 %#ok<ALIGN>
+%             dest1(i,j)=0;
+%             dest2(i,j)=0;
+%             alpha1 = 0;
+%             alpha2 = 0;
+%             prop1(i,j)=0;
+%             prop2(i,j)=0;
+            
+        if RG(i,j)==-9999
+            dest1(i,j)=-9999;
+            dest2(i,j)=-9999;
+            alpha1 = 0;
+            alpha2 = 0;
+            prop1(i,j)=0;
+            prop2(i,j)=0;
+            
+        elseif 0<=RG(i,j) && RG(i,j) < (pi/4)
+            
+  
+%             dest1(i,j)=2;
+%             dest2(i,j)=1;
+            alpha1=(pi/4)-RG(i,j);
+            alpha2=RG(i,j);
+                       
+            if alpha1>alpha2
+                dest1(i,j)=1;
+                dest2(i,j)=2;
+            prop2(i,j)=alpha2/(alpha1+alpha2);
+            prop1(i,j)=alpha1/(alpha1+alpha2);
+            else
+                s=s+1;
+                dest1(i,j)=2;
+                dest2(i,j)=1;
+            prop1(i,j)=alpha2/(alpha1+alpha2);
+            prop2(i,j)=alpha1/(alpha1+alpha2);    
+            end
+            
+        elseif (pi/4) <= RG(i,j) && RG(i,j)<= (pi/2)
+%                      dest1(i,j)=3;
+%                      dest2(i,j)=2;
+            alpha1=(pi/2)-RG(i,j);
+            alpha2=RG(i,j)-(pi/4);
+            
+            if alpha1>alpha2
+                dest1(i,j)=2;
+                dest2(i,j)=3;
+            prop2(i,j)=alpha2/(alpha1+alpha2);
+            prop1(i,j)=alpha1/(alpha1+alpha2);
+            else
+                dest1(i,j)=3;
+                dest2(i,j)=2;
+                prop1(i,j)=alpha2/(alpha1+alpha2);
+            prop2(i,j)=alpha1/(alpha1+alpha2);   
+            end
+            %
+        elseif (pi/2) <RG(i,j) && RG(i,j)<= (3*pi/4)
+%                         dest1(i,j)=4;
+%                         dest2(i,j)=3;
+            alpha1=(3*pi/4)-RG(i,j);
+            alpha2=RG(i,j)-(pi/2);
+            
+            if alpha1>alpha2
+                dest1(i,j)=3;
+                dest2(i,j)=4;
+            prop2(i,j)=alpha2/(alpha1+alpha2);
+            prop1(i,j)=alpha1/(alpha1+alpha2);
+            else
+                dest1(i,j)=4;
+                dest2(i,j)=3;
+                prop1(i,j)=alpha2/(alpha1+alpha2);
+                prop2(i,j)=alpha1/(alpha1+alpha2);
+            end
+        elseif (3*pi/4)<RG(i,j)&& RG(i,j)<= pi
+%                         dest1(i,j)=5;
+%                         dest2(i,j)=4;
+            alpha1=pi-RG(i,j);
+            alpha2=RG(i,j)-(3*pi/4);
+           
+            if alpha1>alpha2
+                dest1(i,j)=4;
+                dest2(i,j)=5;
+            prop2(i,j)=alpha2/(alpha1+alpha2);
+            prop1(i,j)=alpha1/(alpha1+alpha2);
+            else
+                dest1(i,j)=5;
+                dest2(i,j)=4;
+            prop1(i,j)=alpha2/(alpha1+alpha2);
+            prop2(i,j)=alpha1/(alpha1+alpha2);
+            end
+        elseif pi <RG(i,j) && RG(i,j)<=(5*pi/4)
+%                         dest1(i,j)=6;
+%                         dest2(i,j)=5;
+            alpha1=(5*pi/4)-RG(i,j);
+            alpha2=RG(i,j)-pi;
+            
+            if alpha1>alpha2
+                dest1(i,j)=5;
+                dest2(i,j)=6;
+            prop2(i,j)=alpha2/(alpha1+alpha2);
+            prop1(i,j)=alpha1/(alpha1+alpha2);
+            else
+                dest1(i,j)=6;
+                dest2(i,j)=5;
+            prop1(i,j)=alpha2/(alpha1+alpha2);
+            prop2(i,j)=alpha1/(alpha1+alpha2);
+            end
+        elseif (5*pi/4) <RG(i,j)&& RG(i,j)<= (3*pi/2)
+%                         dest1(i,j)=7;
+%                         dest2(i,j)=6;
+            alpha1=(3*pi/2)-RG(i,j);
+            alpha2=RG(i,j)-(5*pi/4);
+            
+            if alpha1>alpha2
+                dest1(i,j)=6;
+                dest2(i,j)=7;
+            prop2(i,j)=alpha2/(alpha1+alpha2);
+            prop1(i,j)=alpha1/(alpha1+alpha2);
+            else
+                dest1(i,j)=7;
+                dest2(i,j)=6;
+            prop1(i,j)=alpha2/(alpha1+alpha2);
+            prop2(i,j)=alpha1/(alpha1+alpha2);
+            end
+        elseif (3*pi/2)<RG(i,j)&& RG(i,j)<=(7*pi/4)
+%                         dest1(i,j)=8;
+%                         dest2(i,j)=7;
+            alpha1=(7*pi/4)-RG(i,j);
+            alpha2=RG(i,j)-(3*pi/2);
+            
+            if alpha1>alpha2
+                dest1(i,j)=7;
+                dest2(i,j)=8;
+            prop2(i,j)=alpha2/(alpha1+alpha2);
+            prop1(i,j)=alpha1/(alpha1+alpha2);
+            else
+                dest1(i,j)=8;
+                dest2(i,j)=7;
+            prop1(i,j)=alpha2/(alpha1+alpha2);
+            prop2(i,j)=alpha1/(alpha1+alpha2);
+            end
+        elseif (7*pi/4) <RG(i,j)&& RG(i,j)<= (2*pi)
+%                         dest1(i,j)=1;
+%                         dest2(i,j)=8;
+            alpha1=(2*pi)-RG(i,j);
+            alpha2=RG(i,j)-(7*pi/4);
+            
+            if alpha1>alpha2
+                  dest1(i,j)=8;
+                dest2(i,j)=1;
+            prop2(i,j)=alpha2/(alpha1+alpha2);
+            prop1(i,j)=alpha1/(alpha1+alpha2);
+            else
+                dest1(i,j)=1;
+                dest2(i,j)=8;
+            prop1(i,j)=alpha2/(alpha1+alpha2);
+            prop2(i,j)=alpha1/(alpha1+alpha2);  
+            end
+        end
+        %  if alpha1~=0 && alpha2~=0
+        %    if alpha1>alpha2
+        %      prop2(i,j)=alpha2/(alpha1+alpha2);
+        %      prop1(i,j)=alpha1/(alpha1+alpha2);
+        %
+        % elseif alpha1==0 && alpha2==0
+        %         prop1(i,j)=0;
+        %         prop2(i,j)=0;
+        % elseif (alpha1==0 && alpha2~=0)
+        %          prop1(i,j)=1;
+        %          prop2(i,j)=0;
+        %
+        %     end
+    end
+end
+
+%%%%read tnk prmtrs
+filename='TM2tanques-Ara-20a22jul13-5min.xlsx';
+xlrange='B52:R915';
+T=xlsread(filename,xlrange);
+[mt,nt]=size(T);
+% B52:R416';
+qs1t=zeros(m,n,mt);
+qs2t=zeros(m,n,mt);
+qs3t=zeros(m,n,mt);
+qb1t=zeros(m,n,mt);
+global S1ff;
+global S2ff;
+S1ff=zeros(m,n,mt);
+S2ff=zeros(m,n,mt);
+
+S1t=zeros(m,n,mt);
+S2t=zeros(m,n,mt);
+IUSt=zeros(m,n,mt);
+flowtt=zeros(m,n,mt);
+acu=zeros(m,n,1);
+
+% HI1=15;
+% HI2=225;
+% HA1=20;
+% HA2=15;
+% HB1=0.0;
+% a1=0.35;
+% a2=0.65;
+% b1=0.00003;
+% a0=0.00000005;
+
+% HA1=70;
+% HA2=10;
+% HB1=10;
+% a1=0.0579;
+% a2=0.2800;
+% b1=0.001;
+% a0=0.0841;
+
+
+[arv1,arv2,arv3]=enviaCells(178,123,dest1,dest2);
+acu=acumulaCell(23,21,dest1,dest2,arv1,arv2);
+
+acum=zeros(m,n,1);
+% for hus=1:1:178
+%
+%     for huo=1:1:123
+%       if (huo<=20 && hus<=22)
+%             acum(hus,huo)=acu(hus,huo);
+%       end
+%     end
+% end
+
+
+for tt=1:1:mt
+    ETR1=T(tt,2);
+    ETR2=T(tt,12);
+    P=T(tt,1);
+    Spday1=T(tt,4);
+    Spday2=T(tt,11);
+    
+    [S1f,S2f,qs1,qs2,qs3,qb1,S1,S2,totalflow]=tankcalctestenovo(ETR1,ETR2,P,Spday1,Spday2,dest1,dest2,prop1,prop2, m,n,tt,S1ff,S2ff,acum);
+    qs1t(:,:,tt)=qs1;
+    qs2t(:,:,tt)=qs2;
+    qs3t(:,:,tt)=qs3;
+    qb1t(:,:,tt)=qb1;
+    S1ff(:,:,tt)=S1f;
+    S2ff(:,:,tt)=S2f;
+    S1t(:,:,tt)=S1;
+    S2t(:,:,tt)=S2;
+    flowtt(:,:,tt)=totalflow;
+   %%  IUSt(:,:,tt)=IUS;
+end
+toc
